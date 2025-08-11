@@ -16,8 +16,43 @@
       {
         "command": "neuromesh.helloWorld",
         "title": "Hello World"
+      },
+      {
+        "command": "neuromesh.indexWorkspace",
+        "title": "Index Workspace"
+      },
+      {
+        "command": "neuromesh.createProject",
+        "title": "Create New Project"
+      },
+      {
+        "command": "neuromesh.openProject",
+        "title": "Open Project"
+      },
+      {
+        "command": "neuromesh.cloneRepository",
+        "title": "Clone Repository"
       }
-    ]
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "neuromesh",
+          "title": "NeuroMesh",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "neuromesh": [
+        {
+          "type": "webview",
+          "id": "neuromesh.sidebar",
+          "name": "NeuroMesh Assistant",
+          "when": "true"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
