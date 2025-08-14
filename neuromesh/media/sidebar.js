@@ -1,25 +1,58 @@
 (function () {
   const vscode = acquireVsCodeApi();
 
+  // State management
+  let currentState = 'loading'; // 'loading', 'empty', 'index', 'chat'
+  let isIndexed = false;
+
   // Initialize UI elements
-  const dynamicActionArea = document.getElementById('dynamicActionArea');
+  const loadingState = document.getElementById('loadingState');
+  const emptyState = document.getElementById('emptyState');
+  const indexState = document.getElementById('indexState');
+  const chatState = document.getElementById('chatState');
   const messageInput = document.getElementById('messageInput');
   const sendButton = document.getElementById('sendMessage');
   const messagesContainer = document.getElementById('messages');
+  const fileChangesList = document.getElementById('fileChangesList');
 
   // Header button handlers
   document.getElementById('openSettings').addEventListener('click', () => {
     vscode.postMessage({ command: 'openSettings' });
   });
 
-  // Auto-resize textarea
-  messageInput.addEventListener('input', function() {
-    this.style.height = 'auto';
-    this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+  // Action button handlers
+  document.getElementById('createProject').addEventListener('click', () => {
+    vscode.postMessage({ command: 'createProject' });
   });
+
+  document.getElementById('openProject').addEventListener('click', () => {
+    vscode.postMessage({ command: 'openProject' });
+  });
+
+  document.getElementById('cloneRepository').addEventListener('click', () => {
+    vscode.postMessage({ command: 'cloneRepository' });
+  });
+
+  document.getElementById('indexWorkspace').addEventListener('click', () => {
+    vscode.postMessage({ command: 'indexWorkspace' });
+    showState('chat');
+    isIndexed = true;
+    addWelcomeMessage();
+    addSampleFileChanges();
+  });
+
+  // Auto-resize textarea
+  if (messageInput) {
+    messageInput.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+    });
+  }
 
   // Send message functionality
   function sendMessage() {
+    if (!messageInput) return;
+
     const message = messageInput.value.trim();
     if (message) {
       addMessage('user', message);
@@ -28,22 +61,36 @@
 
       // Simulate AI response (replace with actual AI integration)
       setTimeout(() => {
-        addMessage('assistant', 'I received your message: "' + message + '". This is a placeholder response. AI integration coming soon!');
+        const responses = [
+          'I can help you with that! Let me analyze your codebase...',
+          'Based on your code structure, I recommend...',
+          'I found some interesting patterns in your project. Would you like me to explain?',
+          'Let me check the recent changes and provide suggestions.',
+          'I can help you refactor this code or add new features. What would you prefer?'
+        ];
+        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+        addMessage('assistant', randomResponse);
       }, 1000);
     }
   }
 
-  sendButton.addEventListener('click', sendMessage);
+  if (sendButton) {
+    sendButton.addEventListener('click', sendMessage);
+  }
 
-  messageInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
-    }
-  });
+  if (messageInput) {
+    messageInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+  }
 
   // Add message to chat
   function addMessage(sender, content) {
+    if (!messagesContainer) return;
+
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${sender}`;
 
@@ -63,6 +110,68 @@
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
   }
 
+  // State management functions
+  function showState(state) {
+    currentState = state;
+
+    // Hide all states
+    loadingState.classList.add('hidden');
+    emptyState.classList.add('hidden');
+    indexState.classList.add('hidden');
+    chatState.classList.add('hidden');
+
+    // Show the requested state
+    switch (state) {
+      case 'loading':
+        loadingState.classList.remove('hidden');
+        break;
+      case 'empty':
+        emptyState.classList.remove('hidden');
+        break;
+      case 'index':
+        indexState.classList.remove('hidden');
+        break;
+      case 'chat':
+        chatState.classList.remove('hidden');
+        break;
+    }
+  }
+
+  // Add welcome message for chat state
+  function addWelcomeMessage() {
+    setTimeout(() => {
+      addMessage('assistant', '🎉 Workspace indexed successfully! I can now help you with code analysis, refactoring, debugging, and more. What would you like to work on?');
+    }, 500);
+  }
+
+  // Add sample file changes
+  function addSampleFileChanges() {
+    if (!fileChangesList) return;
+
+    const sampleChanges = [
+      { name: 'src/extension.ts', status: 'modified' },
+      { name: 'media/sidebar.css', status: 'modified' },
+      { name: 'package.json', status: 'modified' }
+    ];
+
+    fileChangesList.innerHTML = '';
+    sampleChanges.forEach(change => {
+      const item = document.createElement('div');
+      item.className = 'file-change-item';
+
+      const status = document.createElement('div');
+      status.className = `file-change-status ${change.status}`;
+
+      const name = document.createElement('span');
+      name.className = 'file-change-name';
+      name.textContent = change.name;
+
+      item.appendChild(status);
+      item.appendChild(name);
+      fileChangesList.appendChild(item);
+    });
+  }
+
   // Request initial workspace state
   vscode.postMessage({ command: 'checkWorkspaceState' });
 
@@ -76,78 +185,13 @@
   });
 
   function updateWorkspaceUI(state) {
-    dynamicActionArea.innerHTML = '';
-
     if (state === 'active') {
-      // Show index workspace section for active projects
-      const indexSection = document.createElement('div');
-      indexSection.className = 'index-section';
-
-      const title = document.createElement('h3');
-      title.textContent = 'Workspace Ready';
-      title.style.marginBottom = '16px';
-      title.style.color = 'var(--vscode-foreground)';
-
-      const description = document.createElement('p');
-      description.textContent = 'Your workspace contains code files. Index it to enable AI assistance.';
-      description.style.marginBottom = '20px';
-      description.style.color = 'var(--vscode-descriptionForeground)';
-      description.style.fontSize = '14px';
-
-      const indexButton = document.createElement('button');
-      indexButton.className = 'index-button';
-      indexButton.innerHTML = '<span class="icon">🔍</span>Index Workspace';
-      indexButton.addEventListener('click', () => {
-        vscode.postMessage({ command: 'indexWorkspace' });
-      });
-
-      indexSection.appendChild(title);
-      indexSection.appendChild(description);
-      indexSection.appendChild(indexButton);
-      dynamicActionArea.appendChild(indexSection);
-
+      showState('index');
     } else {
-      // Show action buttons for empty workspaces
-      const title = document.createElement('h3');
-      title.textContent = 'Get Started';
-      title.style.marginBottom = '16px';
-      title.style.color = 'var(--vscode-foreground)';
-      title.style.textAlign = 'center';
-
-      const description = document.createElement('p');
-      description.textContent = 'Choose an option to start working with NeuroMesh:';
-      description.style.marginBottom = '20px';
-      description.style.color = 'var(--vscode-descriptionForeground)';
-      description.style.fontSize = '14px';
-      description.style.textAlign = 'center';
-
-      const buttonsContainer = document.createElement('div');
-      buttonsContainer.className = 'action-buttons';
-
-      const actions = [
-        { text: 'Create New Project', icon: '📁', command: 'createProject' },
-        { text: 'Open Project', icon: '📂', command: 'openProject' },
-        { text: 'Clone Repository', icon: '🔗', command: 'cloneRepository' }
-      ];
-
-      actions.forEach(action => {
-        const button = document.createElement('button');
-        button.className = 'action-button';
-        button.innerHTML = `<span class="icon">${action.icon}</span>${action.text}`;
-        button.addEventListener('click', () => {
-          vscode.postMessage({ command: action.command });
-        });
-        buttonsContainer.appendChild(button);
-      });
-
-      dynamicActionArea.appendChild(title);
-      dynamicActionArea.appendChild(description);
-      dynamicActionArea.appendChild(buttonsContainer);
+      showState('empty');
     }
   }
 
-  // Add welcome message
-  setTimeout(() => {
-    addMessage('assistant', 'Welcome to NeuroMesh! I\'m your AI coding assistant. How can I help you today?');
-  }, 500);
+  // Initialize with loading state
+  showState('loading');
 })();

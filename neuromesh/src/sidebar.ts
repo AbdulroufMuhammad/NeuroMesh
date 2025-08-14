@@ -81,21 +81,57 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             </div>
           </div>
 
-          <!-- Dynamic Content Area -->
-          <div id="dynamicActionArea" class="content-section">
-            <div class="loading-state">
-              <div class="spinner"></div>
-              <p>Checking workspace...</p>
+          <!-- State 1: Empty Workspace -->
+          <div id="emptyState" class="content-section hidden">
+            <div class="empty-state">
+              <h3>Get Started</h3>
+              <p>Choose an option to start working with NeuroMesh</p>
+              <div class="action-buttons">
+                <button id="createProject" class="action-button">
+                  <span class="icon">📁</span>
+                  Create New Project
+                </button>
+                <button id="openProject" class="action-button">
+                  <span class="icon">📂</span>
+                  Open Project
+                </button>
+                <button id="cloneRepository" class="action-button">
+                  <span class="icon">🔗</span>
+                  Clone Repository
+                </button>
+              </div>
             </div>
           </div>
 
-          <!-- Chat Section -->
-          <div class="chat-section">
-            <div class="chat-header">
-              <h3>AI Assistant</h3>
-              <span class="status-indicator online"></span>
+          <!-- State 2: Index Workspace -->
+          <div id="indexState" class="content-section hidden">
+            <div class="index-state">
+              <h3>Workspace Ready</h3>
+              <p>Your workspace contains code files. Index it to enable AI assistance and unlock powerful features.</p>
+              <button id="indexWorkspace" class="index-button">
+                <span class="icon">🔍</span>
+                Index Codebase
+              </button>
             </div>
+          </div>
+
+          <!-- State 3: Chat Interface -->
+          <div id="chatState" class="chat-section hidden">
+            <!-- File Changes Section -->
+            <div class="file-changes-section">
+              <div class="file-changes-header">
+                <span class="icon">📝</span>
+                <h4>Recent Changes</h4>
+              </div>
+              <div id="fileChangesList" class="file-changes-list">
+                <!-- File changes will be populated here -->
+              </div>
+            </div>
+
+            <!-- Messages Container -->
             <div id="messages" class="messages-container"></div>
+
+            <!-- Input Section -->
             <div class="input-container">
               <div class="input-wrapper">
                 <textarea
@@ -107,6 +143,14 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                   <span class="icon">➤</span>
                 </button>
               </div>
+            </div>
+          </div>
+
+          <!-- Loading State -->
+          <div id="loadingState" class="content-section">
+            <div class="loading-state">
+              <div class="spinner"></div>
+              <p>Checking workspace...</p>
             </div>
           </div>
         </div>

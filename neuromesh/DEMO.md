@@ -1,8 +1,8 @@
-# NeuroMesh Extension Demo
+# NeuroMesh Extension Demo - Modern Interface
 
 ## Quick Demo Guide
 
-This guide provides a quick demonstration of the NeuroMesh extension features.
+This guide demonstrates the new modern, dark-themed NeuroMesh extension with its three-state interface inspired by Augment Code.
 
 ### Prerequisites
 - VS Code installed
@@ -15,14 +15,41 @@ This guide provides a quick demonstration of the NeuroMesh extension features.
 2. Press `F5` or go to `Run > Start Debugging`
 3. A new VS Code window will open with the extension loaded
 
-#### 2. Explore the NeuroMesh Interface
+### New Modern Interface Features
+
+#### 🎨 **Modern Dark Theme**
+- Sleek dark color scheme (#1a1a1a background)
+- Purple gradient accents (#6366f1 to #8b5cf6)
+- Clean typography and spacing
+- Smooth animations and transitions
+
+#### 🔄 **Three-State Interface**
+
+**State 1: Empty Workspace**
+- Shows when no code files are detected
+- Three clean action buttons:
+  - 📁 Create New Project
+  - 📂 Open Project
+  - 🔗 Clone Repository
+
+**State 2: Index Workspace**
+- Shows when code files are detected but not indexed
+- Single prominent "Index Codebase" button
+- Clean description of indexing benefits
+
+**State 3: Chat Interface**
+- Modern chat interface with AI assistant
+- File changes section at the top
+- Smooth message animations
+- Modern input field with gradient send button
+
+#### 2. Explore the New Interface
 1. In the new window, look for the NeuroMesh icon (🧠) in the Activity Bar (left sidebar)
 2. Click the icon to open the NeuroMesh sidebar
-3. Observe the interface:
-   - Header with NeuroMesh branding
-   - Settings button
-   - Dynamic action area
-   - AI Assistant chat interface
+3. Observe the modern interface:
+   - Clean dark header with purple gradient logo
+   - State-based content area
+   - Smooth transitions between states
 
 #### 3. Test Core Commands
 
