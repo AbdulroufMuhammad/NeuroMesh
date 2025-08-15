@@ -1,10 +1,122 @@
-# NeuroMesh - AI Coding Agent
+# NeuroMesh VS Code Extension
 
-NeuroMesh is an intelligent VS Code extension that provides AI-powered coding assistance through a modern, intuitive interface. It features a comprehensive settings system, workspace indexing, and seamless integration with multiple AI providers.
+NeuroMesh is an experimental VS Code extension inspired by the Augment Code interface pattern. It focuses on a custom, sectioned settings experience and lays the groundwork for future context‑aware coding assistance.
 
-## Features
+This README documents what is implemented today, what is intentionally missing, and the roadmap to reach feature parity with the Augment reference you provided.
 
-### 🧠 **AI-Powered Code Assistance**
+## Project Overview
+
+NeuroMesh provides a Monaco‑powered custom settings panel organized into sidebar sections that mirror the Augment Settings UI (Context, Tools, Rules & Guidelines, etc.). The goal is to build a solid foundation for a production‑quality developer assistant while clearly separating what exists now from planned functionality.
+
+## Installation & Setup
+
+- Requirements: VS Code 1.54+, Node.js (for development)
+- Clone the repo and install deps
+  - `npm install`
+- Build and run the extension
+  - `npm run compile`
+  - Press F5 in VS Code to start the Extension Development Host
+- Open the NeuroMesh Settings panel
+  - Click the gear button in the NeuroMesh sidebar, or run the command "NeuroMesh Settings"
+
+## Implemented Features (✅)
+
+The current project includes the following functionality:
+
+- ✅ Custom settings interface with Monaco Editor
+  - Embedded Monaco Editor inside a webview
+  - Section‑based editing (each section loads into the editor as JSON)
+  - Debounced auto‑save and explicit Save button
+  - Per‑section Reset to defaults
+- ✅ Sidebar sections (matching the Augment pattern)
+  - Context
+  - API Keys and LLM Configuration
+  - AI Settings
+  - Workspace Settings
+  - UI Settings
+  - Performance Settings
+  - Debug Settings
+- ✅ Settings persistence to VS Code configuration
+  - Changes are stored under `neuromesh.*` keys via `workspace.getConfiguration()`
+  - Per‑section JSON is written as individual keys (e.g., `neuromesh.context.enabled`)
+  - Fallback/defaults are available for reset
+- ✅ Extension activation and basic structure
+  - Custom Activity Bar container and webview sidebar
+  - Command: `NeuroMesh Settings` opens the custom settings panel
+  - TypeScript build via esbuild; eslint and type checks wired in
+
+## Missing Core Features (❌ / 🚧)
+
+The following Augment functionality is not implemented yet. These are either out of scope for the current milestone or planned next:
+
+- ❌ Context engine for code analysis and retrieval
+- ❌ Context display within the Settings “Context” section (UI is present; functionality TBD)
+- ❌ AI‑powered code suggestions and completions
+- ❌ Workspace indexing and file analysis
+- ❌ Code understanding and semantic search
+- ❌ Integration with LLM providers (OpenAI, Anthropic, others)
+- ❌ Real‑time code context awareness across the editor
+- ❌ Tools integrations, runbooks, or agent workflows
+- ❌ Rules and User Guidelines enforcement or authoring UI
+- ❌ Any other core Augment features visible in the reference interface (e.g., advanced context graphs, per‑file status, account management)
+
+## Development Roadmap
+
+Short‑term (Milestone 1)
+- Stabilize Monaco‑based settings panel (UX polish, accessibility, theming)
+- Add JSON schema/intellisense for each section to guide user edits
+- Strong validation with user feedback in the panel
+- Persist last‑selected section; support undo of unsaved edits
+
+Mid‑term (Milestone 2)
+- Introduce a minimal context indexer (file scanning, filters, basic scoring)
+- Add context preview in the Context section (file lists, status, errors)
+- Pluggable LLM provider layer with API key validation tests
+- Safe telemetry for settings actions (opt‑in)
+
+Long‑term (Milestone 3)
+- Full workspace indexing with incremental updates
+- Semantic search and code understanding
+- Inline/code‑lens suggestions via LLMs
+- Real‑time context awareness and multi‑tool orchestration
+- Robust error handling and user‑visible diagnostics
+
+## Contributing
+
+We welcome contributions while we converge toward the Augment UX and feature set.
+
+- Code style: TypeScript, ESLint, Prettier‑compatible formatting
+- Build: `npm run compile` (type‑check, lint, bundle)
+- Test: `npm test` (placeholder, wiring provided)
+- PRs: Please describe scope, testing steps, and any user‑visible changes
+
+## Context & Intent
+
+Per our ongoing conversation, this project intentionally mirrors Augment’s settings interface pattern:
+- Custom settings UI with a sidebar loaded per section
+- Monaco Editor as the main settings editor view (not replacing VS Code’s built‑in settings panel)
+- Settings organized by sections similar to the reference image: Context, Tools, Rules & User Guidelines, Account, etc.
+
+Explicitly, we have not yet implemented Augment’s core engine features (context engine, indexer, semantic search, AI completions). Those are identified in the Missing Core Features and Roadmap sections and will be developed iteratively.
+
+## Commands
+
+- NeuroMesh: Hello World (sample)
+- NeuroMesh: Index Workspace (placeholder)
+- NeuroMesh: Create/Open/Clone Project (placeholders)
+- NeuroMesh: NeuroMesh Settings (opens the custom Monaco settings panel)
+
+## For Developers
+
+- The custom settings panel lives in:
+  - <code>src/settingsWebview.ts</code>, with HTML/JS/CSS in <code>media/</code>
+- Settings are stored in VS Code configuration under `neuromesh.*`
+- The sidebar webview calls `neuromesh.openCustomSettings` to open the panel
+- Build artifacts are in <code>dist/</code>; type‑only out in <code>out/</code>
+
+---
+
+If you want me to flesh out the JSON schemas per section (for Monaco IntelliSense), or wire a minimal indexer to light up the Context section, say the word and I’ll prepare those next.
 - Support for multiple AI models (GPT-4, GPT-3.5-turbo, Claude-3, local models)
 - Intelligent code analysis and suggestions
 - Context-aware responses based on your workspace
