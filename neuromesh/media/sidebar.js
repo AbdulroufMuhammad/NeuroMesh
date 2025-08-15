@@ -181,6 +181,8 @@
 
     if (message.command === 'updateWorkspaceState') {
       updateWorkspaceUI(message.state);
+    } else if (message.command === 'updateSettings') {
+      updateUISettings(message.settings);
     }
   });
 
@@ -189,6 +191,32 @@
       showState('index');
     } else {
       showState('empty');
+    }
+  }
+
+  function updateUISettings(settings) {
+    // Apply theme settings
+    if (settings.theme) {
+      document.body.setAttribute('data-theme', settings.theme);
+    }
+
+    // Apply compact mode
+    if (settings.compactMode) {
+      document.body.classList.add('compact-mode');
+    } else {
+      document.body.classList.remove('compact-mode');
+    }
+
+    // Update AI configuration indicator
+    const aiIndicator = document.querySelector('.ai-status');
+    if (aiIndicator) {
+      aiIndicator.textContent = settings.aiConfigured ? 'AI: Ready' : 'AI: Not Configured';
+      aiIndicator.className = `ai-status ${settings.aiConfigured ? 'configured' : 'not-configured'}`;
+    }
+
+    // Log debug info if debug mode is enabled
+    if (settings.debugMode) {
+      console.log('NeuroMesh UI settings updated:', settings);
     }
   }
 

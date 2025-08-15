@@ -2,6 +2,7 @@ import * as assert from 'assert';
 import * as vscode from 'vscode';
 import * as myExtension from '../extension';
 import { SidebarProvider } from '../sidebar';
+import { SettingsManager } from '../settings';
 
 suite('NeuroMesh Extension Test Suite', () => {
 	vscode.window.showInformationMessage('Starting NeuroMesh tests...');
@@ -50,10 +51,12 @@ suite('NeuroMesh Extension Test Suite', () => {
 	suite('SidebarProvider', () => {
 		let sidebarProvider: SidebarProvider;
 		let mockExtensionUri: vscode.Uri;
+		let mockSettingsManager: SettingsManager;
 
 		setup(() => {
 			mockExtensionUri = vscode.Uri.file('/test/path');
-			sidebarProvider = new SidebarProvider(mockExtensionUri);
+			mockSettingsManager = SettingsManager.getInstance();
+			sidebarProvider = new SidebarProvider(mockExtensionUri, mockSettingsManager);
 		});
 
 		test('SidebarProvider should be instantiable', () => {

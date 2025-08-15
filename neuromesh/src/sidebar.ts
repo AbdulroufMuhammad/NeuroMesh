@@ -1,9 +1,13 @@
 import * as vscode from 'vscode';
+import { SettingsManager, NeuroMeshSettings } from './settings';
 
 export class SidebarProvider implements vscode.WebviewViewProvider {
   private _view?: vscode.WebviewView;
 
-  constructor(private readonly _extensionUri: vscode.Uri) {}
+  constructor(
+    private readonly _extensionUri: vscode.Uri,
+    private readonly _settingsManager: SettingsManager
+  ) {}
 
   public resolveWebviewView(
     webviewView: vscode.WebviewView,
@@ -43,10 +47,40 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           vscode.commands.executeCommand('neuromesh.cloneRepository');
           break;
         case 'openSettings':
-          vscode.commands.executeCommand('workbench.action.openSettings', 'neuromesh');
+          vscode.commands.executeCommand('neuromesh.openCustomSettings');
           break;
       }
     });
+  }
+
+  /**
+   * Update settings and apply them to the sidebar
+   */
+  public updateSettings(settings: NeuroMeshSettings): void {
+    if (!this._view) {
+      return;
+    }
+
+    // Apply UI settings to the sidebar
+    const effectiveTheme = this._settingsManager.getEffectiveTheme();
+    const compactMode = settings.ui.compactMode;
+
+    // Send settings update to webview
+    this._view.webview.postMessage({
+      command: 'updateSettings',
+      settings: {
+        theme: effectiveTheme,
+        compactMode: compactMode,
+        showNotifications: settings.ui.showNotifications,
+        debugMode: settings.debug.enabled,
+        aiConfigured: this._settingsManager.isAIConfigured()
+      }
+    });
+
+    // Show notification if enabled
+    if (settings.ui.showNotifications && settings.debug.enabled) {
+      vscode.window.showInformationMessage('NeuroMesh settings updated');
+    }
   }
 
   private _getHtmlForWebview(webview: vscode.Webview): string {
@@ -75,7 +109,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
               <h2 class="title">NeuroMesh</h2>
             </div>
             <div class="header-actions">
-              <button id="openSettings" class="icon-button" title="Settings">
+              <button id="openSettings" class="icon-button" title="NeuroMesh Settings">
                 <span class="icon">⚙️</span>
               </button>
             </div>
@@ -172,19 +206,30 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     let isActiveWorkspace = false;
 
     if (workspaceFolders && workspaceFolders.length > 0) {
-      // Check if workspace contains code files
-      const codeFilePatterns = ['**/*.{js,ts,jsx,tsx,py,java,cpp,c,cs,php,rb,go,rs,swift,kt}'];
+      // Get workspace settings for file patterns
+      const workspaceSettings = this._settingsManager.getWorkspaceSettings();
+      const debugSettings = this._settingsManager.getDebugSettings();
+
+      // Use configured index patterns or fallback to defaults
+      const codeFilePatterns = workspaceSettings.indexPatterns.length > 0
+        ? workspaceSettings.indexPatterns
+        : ['**/*.{js,ts,jsx,tsx,py,java,cpp,c,cs,php,rb,go,rs,swift,kt}'];
+
+      // Use configured exclude patterns
+      const excludePatterns = workspaceSettings.excludePatterns.join(',');
 
       try {
         for (const pattern of codeFilePatterns) {
-          const files = await vscode.workspace.findFiles(pattern, '**/node_modules/**', 1);
+          const files = await vscode.workspace.findFiles(pattern, excludePatterns, 1);
           if (files.length > 0) {
             isActiveWorkspace = true;
             break;
           }
         }
       } catch (error) {
-        console.error('Error checking workspace files:', error);
+        if (debugSettings.enabled) {
+          console.error('Error checking workspace files:', error);
+        }
       }
     }
 

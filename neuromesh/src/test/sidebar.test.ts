@@ -1,16 +1,19 @@
 import * as assert from 'assert';
 import * as vscode from 'vscode';
 import { SidebarProvider } from '../sidebar';
+import { SettingsManager } from '../settings';
 
 suite('SidebarProvider Test Suite', () => {
 	let sidebarProvider: SidebarProvider;
 	let mockExtensionUri: vscode.Uri;
 	let mockWebviewView: any;
 	let mockWebview: any;
+	let mockSettingsManager: SettingsManager;
 
 	setup(() => {
 		mockExtensionUri = vscode.Uri.file('/test/path');
-		sidebarProvider = new SidebarProvider(mockExtensionUri);
+		mockSettingsManager = SettingsManager.getInstance();
+		sidebarProvider = new SidebarProvider(mockExtensionUri, mockSettingsManager);
 
 		// Create mock webview
 		mockWebview = {

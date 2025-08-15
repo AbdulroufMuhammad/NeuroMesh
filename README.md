@@ -1,51 +1,154 @@
-# neuromesh README
+# NeuroMesh - AI Coding Agent
 
-This is the README for your extension "neuromesh". After writing up a brief description, we recommend including the following sections.
+NeuroMesh is an intelligent VS Code extension that provides AI-powered coding assistance through a modern, intuitive interface. It features a comprehensive settings system, workspace indexing, and seamless integration with multiple AI providers.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+### 🧠 **AI-Powered Code Assistance**
+- Support for multiple AI models (GPT-4, GPT-3.5-turbo, Claude-3, local models)
+- Intelligent code analysis and suggestions
+- Context-aware responses based on your workspace
 
-For example if there is an image subfolder under your extension project workspace:
+### 🎨 **Modern Interface**
+- Clean, dark-themed sidebar with three-state interface
+- Responsive design with smooth animations
+- Compact mode for space-efficient workflows
+- Auto-adapting theme based on VS Code settings
 
-\!\[feature X\]\(images/feature-x.png\)
+### ⚙️ **Comprehensive Settings System**
+- Organized settings in three categories: Context, API Keys & LLM URL, and Configuration
+- Native VS Code settings integration
+- Automatic validation and migration
+- Fallback mechanisms for robust operation
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+### 📁 **Smart Workspace Management**
+- Automatic workspace indexing with configurable patterns
+- File size and pattern filtering
+- Exclude patterns for node_modules, build folders, etc.
+- Auto-indexing on workspace open (configurable)
+
+### 🔧 **Developer-Friendly**
+- Debug logging and comprehensive error handling
+- Settings validation and sanitization
+- Event-driven architecture
+- TypeScript support with full type safety
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+- VS Code 1.54.0 or higher
+- Node.js (for development)
+- API keys for AI services (OpenAI, Anthropic, or custom endpoints)
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+NeuroMesh provides a comprehensive settings system organized into three main categories:
 
-For example:
+### Context Settings
+* Reserved for future context-related configurations (currently empty)
 
-This extension contributes the following settings:
+### API Keys and LLM URL Settings
+* `neuromesh.api.openaiKey`: OpenAI API key for GPT models
+* `neuromesh.api.anthropicKey`: Anthropic API key for Claude models
+* `neuromesh.api.customLlmUrl`: Custom LLM endpoint URL for local/self-hosted models
+* `neuromesh.api.customLlmKey`: API key for custom LLM endpoint
+* `neuromesh.api.timeout`: API request timeout (5-120 seconds)
+* `neuromesh.api.retryAttempts`: Number of retry attempts for failed requests (1-10)
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+### Configuration Settings
+* `neuromesh.ai.enabled`: Enable/disable the AI agent functionality
+* `neuromesh.ai.model`: AI model selection (gpt-4, gpt-3.5-turbo, claude-3, local)
+* `neuromesh.ai.maxTokens`: Maximum number of tokens for AI responses (100-32000)
+* `neuromesh.workspace.autoIndex`: Automatically index workspace when opened
+* `neuromesh.workspace.indexPatterns`: File patterns to include when indexing
+* `neuromesh.workspace.excludePatterns`: File patterns to exclude when indexing
+* `neuromesh.workspace.maxFileSize`: Maximum file size in bytes to index
+* `neuromesh.ui.theme`: Theme for the NeuroMesh sidebar (auto, light, dark)
+* `neuromesh.ui.showNotifications`: Show notifications for NeuroMesh operations
+* `neuromesh.ui.compactMode`: Use compact mode for the sidebar interface
+* `neuromesh.performance.enableCaching`: Enable caching for improved performance
+* `neuromesh.performance.cacheTimeout`: Cache timeout in seconds
+* `neuromesh.debug.enabled`: Enable debug logging for NeuroMesh
+* `neuromesh.debug.logLevel`: Log level for debug output (error, warn, info, debug)
+
+For detailed information about the settings system, see [SETTINGS.md](neuromesh/SETTINGS.md).
+
+## Getting Started
+
+### 1. Installation
+1. Install the NeuroMesh extension from the VS Code marketplace
+2. Open a workspace or project folder
+3. Look for the NeuroMesh icon (🧠) in the Activity Bar
+
+### 2. Configuration
+1. Open VS Code Settings (Ctrl/Cmd + ,)
+2. Search for "NeuroMesh"
+3. Configure your API keys and preferences
+4. Or use the command palette: `NeuroMesh: Open Settings`
+
+### 3. Usage
+- Click the NeuroMesh icon to open the sidebar
+- The extension will automatically detect and index your workspace
+- Start chatting with the AI assistant for code help
+- Use commands from the Command Palette (Ctrl/Cmd + Shift + P)
+
+## Available Commands
+
+- `NeuroMesh: Hello World` - Test command
+- `NeuroMesh: Index Workspace` - Manually index the current workspace
+- `NeuroMesh: Create New Project` - Create a new project
+- `NeuroMesh: Open Project` - Open an existing project
+- `NeuroMesh: Clone Repository` - Clone a Git repository
+- `NeuroMesh: Open Settings` - Open NeuroMesh settings
+- `NeuroMesh: Reset Settings` - Reset all settings to defaults
+- `NeuroMesh: Validate Settings` - Validate and fix settings
+- `NeuroMesh: Show Settings Info` - Display current settings summary
+
+## Development
+
+### Building from Source
+```bash
+# Clone the repository
+git clone <repository-url>
+cd neuromesh
+
+# Install dependencies
+npm install
+
+# Compile the extension
+npm run compile
+
+# Run tests
+npm test
+
+# Launch in development mode
+code --extensionDevelopmentPath=.
+```
+
+### Testing
+The extension includes comprehensive tests for:
+- Settings management and validation
+- Sidebar functionality
+- Extension activation and commands
+- TypeScript compilation and linting
+
+Run tests with: `npm test`
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+- Settings validation may show warnings on first startup (automatically resolved)
+- Large workspaces may take longer to index (configurable file size limits available)
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+### 0.0.1
 
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
+Initial release of NeuroMesh featuring:
+- Complete settings system with three organized categories
+- Modern sidebar interface with state management
+- Workspace indexing with configurable patterns
+- Multiple AI provider support
+- Comprehensive validation and migration system
+- Full TypeScript support and testing suite
 
 ---
 

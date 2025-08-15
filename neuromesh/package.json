@@ -32,6 +32,26 @@
       {
         "command": "neuromesh.cloneRepository",
         "title": "Clone Repository"
+      },
+      {
+        "command": "neuromesh.openSettings",
+        "title": "Open NeuroMesh Settings"
+      },
+      {
+        "command": "neuromesh.resetSettings",
+        "title": "Reset NeuroMesh Settings"
+      },
+      {
+        "command": "neuromesh.validateSettings",
+        "title": "Validate NeuroMesh Settings"
+      },
+      {
+        "command": "neuromesh.showSettingsInfo",
+        "title": "Show NeuroMesh Settings Info"
+      },
+      {
+        "command": "neuromesh.openCustomSettings",
+        "title": "NeuroMesh Settings"
       }
     ],
     "viewsContainers": {
@@ -52,6 +72,166 @@
           "when": "true"
         }
       ]
+    },
+    "context": {
+      "title": "Context",
+      "description": "Context management settings for NeuroMesh AI agent",
+      "properties": {
+        "neuromesh.context.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable context awareness for AI responses"
+        },
+        "neuromesh.context.maxFiles": {
+          "type": "number",
+          "default": 50,
+          "minimum": 1,
+          "maximum": 200,
+          "description": "Maximum number of files to include in context"
+        },
+        "neuromesh.context.includeComments": {
+          "type": "boolean",
+          "default": true,
+          "description": "Include code comments in context analysis"
+        }
+      }
+    },
+    "apiKeysAndLlmUrl": {
+      "title": "API Keys and LLM Configuration",
+      "description": "Configure API access for AI services and custom endpoints",
+      "properties": {
+        "neuromesh.api.openaiKey": {
+          "type": "string",
+          "default": "",
+          "description": "OpenAI API key for GPT models"
+        },
+        "neuromesh.api.anthropicKey": {
+          "type": "string",
+          "default": "",
+          "description": "Anthropic API key for Claude models"
+        },
+        "neuromesh.api.customLlmUrl": {
+          "type": "string",
+          "default": "",
+          "description": "Custom LLM endpoint URL for local or self-hosted models"
+        },
+        "neuromesh.api.customLlmKey": {
+          "type": "string",
+          "default": "",
+          "description": "API key for custom LLM endpoint"
+        },
+        "neuromesh.api.timeout": {
+          "type": "number",
+          "default": 30000,
+          "minimum": 5000,
+          "maximum": 120000,
+          "description": "API request timeout in milliseconds"
+        },
+        "neuromesh.api.retryAttempts": {
+          "type": "number",
+          "default": 3,
+          "minimum": 1,
+          "maximum": 10,
+          "description": "Number of retry attempts for failed API requests"
+        }
+      }
+    },
+    "configuration": {
+      "title": "NeuroMesh",
+      "properties": {
+        "neuromesh.ai.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable the AI agent functionality."
+        },
+        "neuromesh.ai.model": {
+          "type": "string",
+          "enum": ["gpt-4", "gpt-3.5-turbo", "claude-3", "local"],
+          "default": "gpt-4",
+          "description": "AI model to use for code analysis and suggestions."
+        },
+        "neuromesh.ai.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "API key for the AI service (leave empty to use environment configuration)."
+        },
+        "neuromesh.ai.maxTokens": {
+          "type": "number",
+          "default": 4000,
+          "minimum": 100,
+          "maximum": 32000,
+          "description": "Maximum number of tokens to use for AI responses."
+        },
+        "neuromesh.workspace.autoIndex": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically index workspace when opened."
+        },
+        "neuromesh.workspace.indexPatterns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": ["**/*.{js,ts,jsx,tsx,py,java,cpp,c,cs,php,rb,go,rs,swift,kt}"],
+          "description": "File patterns to include when indexing the workspace."
+        },
+        "neuromesh.workspace.excludePatterns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": ["**/node_modules/**", "**/dist/**", "**/build/**", "**/.git/**"],
+          "description": "File patterns to exclude when indexing the workspace."
+        },
+        "neuromesh.workspace.maxFileSize": {
+          "type": "number",
+          "default": 1048576,
+          "description": "Maximum file size in bytes to index (default: 1MB)."
+        },
+        "neuromesh.ui.theme": {
+          "type": "string",
+          "enum": ["auto", "light", "dark"],
+          "default": "auto",
+          "description": "Theme to use for the NeuroMesh sidebar."
+        },
+        "neuromesh.ui.showNotifications": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show notifications for NeuroMesh operations."
+        },
+        "neuromesh.ui.compactMode": {
+          "type": "boolean",
+          "default": false,
+          "description": "Use compact mode for the sidebar interface."
+        },
+        "neuromesh.performance.enableCaching": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable caching for improved performance."
+        },
+        "neuromesh.performance.cacheTimeout": {
+          "type": "number",
+          "default": 3600,
+          "minimum": 60,
+          "description": "Cache timeout in seconds."
+        },
+        "neuromesh.debug.enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable debug logging for NeuroMesh."
+        },
+        "neuromesh.debug.logLevel": {
+          "type": "string",
+          "enum": ["error", "warn", "info", "debug"],
+          "default": "info",
+          "description": "Log level for debug output."
+        },
+        "neuromesh.internal.settingsVersion": {
+          "type": "string",
+          "default": "0.0.0",
+          "description": "Internal settings version for migration purposes."
+        }
+      }
     }
   },
   "scripts": {
